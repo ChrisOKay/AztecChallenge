@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="theme_data" version="1.3.0" audacityversion="2.1.0" sel0="0.0000000000" sel1="6.9241496599" vpos="0" h="0.0000000000" zoom="86.1328125000" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds">
+	<tags>
+		<tag name="major_brand" value="dash"/>
+		<tag name="Software" value="Lavf56.25.101"/>
+		<tag name="compatible_brands" value="iso6mp41"/>
+		<tag name="minor_version" value="0"/>
+	</tags>
+	<wavetrack name="ATARI XL%2FXE GAME- AZTEC CHALLENGE" channel="2" linked="0" mute="0" solo="0" height="254" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="305355">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000d7d.au" len="262144" min="-0.019166" max="0.29328" rms="0.152739"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e0000dcf.au" len="43211" min="-0.015862" max="0.28793" rms="0.121317"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
