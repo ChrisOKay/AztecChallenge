@@ -1,0 +1,4 @@
+bin/
+.fscache
+.DS_Store
+*~
