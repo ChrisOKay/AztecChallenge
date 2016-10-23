@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=1]
+
+[ext_resource path="res://images/single_column_wall.png" type="Texture" id=1]
+
+[node name="Sprite" type="Sprite"]
+
+transform/pos = Vector2( -0.000183105, 0 )
+texture = ExtResource( 1 )
+centered = false
+
+
