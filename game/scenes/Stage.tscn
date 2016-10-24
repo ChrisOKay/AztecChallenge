@@ -39,31 +39,16 @@ scale = Vector2( 1, 1 )
 transform/pos = Vector2( 399.218, 302.104 )
 texture = ExtResource( 2 )
 
-[node name="Player1" type="RigidBody2D" parent="."]
+[node name="Player1" type="KinematicBody2D" parent="."]
 
-editor/display_folded = true
 transform/pos = Vector2( 10, 150 )
 input/pickable = false
 shapes/0/shape = SubResource( 3 )
-shapes/0/transform = Matrix32( 1.92979, 0, 0, 2.86662, 21.997, 24.7864 )
+shapes/0/transform = Matrix32( 1.89592, 0, 0, 2.64076, 21.5567, 26.8424 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
-mode = 2
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-velocity/linear = Vector2( 0, 0 )
-velocity/angular = 0.0
-damp_override/linear = -1.0
-damp_override/angular = -1.0
+collision/margin = 0.08
 script/script = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="Player1"]
@@ -87,8 +72,8 @@ autoplay = ""
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player1"]
 
-transform/pos = Vector2( 21.997, 24.7864 )
-transform/scale = Vector2( 1.92979, 2.86662 )
+transform/pos = Vector2( 21.5567, 26.8424 )
+transform/scale = Vector2( 1.89592, 2.64076 )
 shape = SubResource( 3 )
 trigger = false
 _update_shape_index = 0

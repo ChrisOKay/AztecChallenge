@@ -20,6 +20,6 @@ func _ready():
 			h = floor(rand_range(0,200)/tile_size)
 		
 		# set location of column on Stage
-		ndWall.translate(Vector2(100+(tile_size*i),300+(h*tile_size)))
+		ndWall.translate(Vector2(i*tile_size,300+(h*tile_size)))
 
 		# TODO: Add random cactuses

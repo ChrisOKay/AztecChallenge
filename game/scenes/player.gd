@@ -1,16 +1,32 @@
 
-extends RigidBody2D
+extends KinematicBody2D
 
 # member variables here, example:
-var x_speed = 100
+const yForce = 200
+const WALK_SPEED = 80
 onready var animplayer = get_node("Sprite/AnimationPlayer")
+var velocity = Vector2()
+
+func _fixed_process(delta):
+
+    if Input.is_key_pressed(KEY_SPACE):
+        yForce = -200
+    else:
+        yForce = 200
+
+
+    velocity = Vector2(WALK_SPEED, yForce)
+
+    var motion = velocity * delta
+    motion = move(motion)
+
+    if (is_colliding()):
+        var n = get_collision_normal()
+        motion = n.slide(motion)
+        velocity = n.slide(velocity)
+        move(motion)
 
 func _ready():
-	# Called every time the node is added to the scene.
-	# Initialization here
-	
 	animplayer.play("Walking")
-	set_linear_velocity(Vector2(x_speed,0))
-	
-
+	set_fixed_process(true)
 
