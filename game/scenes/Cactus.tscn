@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=1]
+
+[ext_resource path="res://images/hill_small.png" type="Texture" id=1]
+
+[node name="Cactus" type="Sprite"]
+
+transform/pos = Vector2( 0.237824, -60.8837 )
+transform/scale = Vector2( 0.572, 0.572 )
+texture = ExtResource( 1 )
+centered = false
+
+

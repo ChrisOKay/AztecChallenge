@@ -9,7 +9,7 @@ extents = Vector2( 10, 10 )
 
 [node name="wallBody" type="StaticBody2D"]
 
-transform/scale = Vector2( 0.57, 0.57 )
+transform/scale = Vector2( 0.572, 0.572 )
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 3.58265, 0, 0, 34.6645, 35.3521, 348.66 )
