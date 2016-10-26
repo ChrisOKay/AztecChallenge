@@ -10,7 +10,6 @@ var can_jump
 var yet_to_jump = 0 # distance to the highest point of the current jump
 
 func _fixed_process(delta):
-	var expectedWalkingDistance = get_pos().x + (WALK_SPEED * delta)
 	
 	if can_jump:
 		if Input.is_key_pressed(KEY_W):
@@ -34,6 +33,16 @@ func _fixed_process(delta):
 	motion = move(motion)
 
 	if (is_colliding()):
+		# let player die if collision is not caused by downward movement
+		if test_move(Vector2(motion.x, min(0,motion.y))):
+			get_node("Sprite/AnimationPlayer").play("Dying")
+			set_fixed_process(false)
+			var t = get_node("../Timer")
+			t.set_wait_time(2.5)
+			t.connect("timeout", self, "startLevel", [1], CONNECT_ONESHOT)
+			t.start()
+			return
+		
 		can_jump = true
 		var n = get_collision_normal()
 		motion = n.slide(motion)
@@ -42,23 +51,23 @@ func _fixed_process(delta):
 	else:
 		can_jump = false
 
-	# check whether Player collided vertically
-	if (get_pos().x - expectedWalkingDistance) < -1:
-		get_node("Sprite/AnimationPlayer").play("Dying")
-		set_fixed_process(false)
-		
-	# continuosly move invisble ground to prevent player from falling through
+	moveGroundAndCanvas()
+
+func _ready():
+	hide()
+
+func startLevel(intLevel):
+	set_pos(Vector2(90, 430))
+	get_node("Sprite/AnimationPlayer").play("Walking")
+	moveGroundAndCanvas()
+	if is_hidden(): show()
+	set_fixed_process(true)
+
+func moveGroundAndCanvas():
+	# continuosly move invisible ground to prevent player from falling through
 	get_node("../Ground").set_pos(Vector2(get_pos().x,0))
 	
 	# transform canvas to follow Player1
 	var newCanvasPos = Matrix32(0,Vector2(-get_pos().x+150,0))
 	get_viewport().set_canvas_transform(newCanvasPos)
-
-func _ready():
-	hide()
-	
-func startLevel(intLevel):
-	get_node("Sprite/AnimationPlayer").play("Walking")
-	show()
-	set_fixed_process(true)
 	

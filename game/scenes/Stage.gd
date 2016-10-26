@@ -49,7 +49,7 @@ func _ready():
 		
 func _input(event):
 	if event.is_pressed() and (event.scancode == KEY_1):
-		get_node("HUD/OptionsLabel").hide()
+		get_node("HUD/Menu").hide()
 		get_node("Player1").startLevel(1)
 		
 	#TODO: Add two player mode
