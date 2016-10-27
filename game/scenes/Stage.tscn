@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://scenes/Stage.gd" type="Script" id=1]
-[ext_resource path="res://images/HUD.png" type="Texture" id=2]
-[ext_resource path="res://scenes/player.gd" type="Script" id=3]
-[ext_resource path="res://images/p1_spritesheet.png" type="Texture" id=4]
+[ext_resource path="res://scenes/Lifes.tscn" type="PackedScene" id=2]
+[ext_resource path="res://images/HUD.png" type="Texture" id=3]
+[ext_resource path="res://scenes/player.gd" type="Script" id=4]
+[ext_resource path="res://images/p1_spritesheet.png" type="Texture" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -46,7 +47,7 @@ script/script = ExtResource( 1 )
 
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( -17.9988, 1.57351e-06, -1.03632e-07, -1.18542, 175.873, 495.436 )
+shapes/0/transform = Matrix32( 17.9988, 0, 0, 1.18542, 175.873, 497 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
@@ -57,8 +58,7 @@ bounce = 0.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
 
-transform/pos = Vector2( 175.873, 495.436 )
-transform/rot = 180.0
+transform/pos = Vector2( 175.873, 497 )
 transform/scale = Vector2( 17.9988, 1.18542 )
 shape = SubResource( 1 )
 trigger = false
@@ -71,10 +71,16 @@ offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
+[node name="P1_Lifes" parent="HUD" instance=ExtResource( 2 )]
+
+transform/pos = Vector2( 586.963, 5.32408 )
+transform/scale = Vector2( 0.478287, 0.478287 )
+z/z = 1
+
 [node name="Foreground Image" type="Sprite" parent="HUD"]
 
 transform/pos = Vector2( 399.218, 302.104 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 
 [node name="Menu" type="Label" parent="HUD"]
 
@@ -102,12 +108,12 @@ shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
 collision/margin = 0.08
-script/script = ExtResource( 3 )
+script/script = ExtResource( 4 )
 
 [node name="Sprite" type="Sprite" parent="Player1"]
 
 transform/scale = Vector2( 0.57, 0.57 )
-texture = ExtResource( 4 )
+texture = ExtResource( 5 )
 centered = false
 vframes = 3
 hframes = 7
@@ -136,8 +142,8 @@ _update_shape_index = 0
 [node name="Timer" type="Timer" parent="."]
 
 process_mode = 1
-wait_time = 1.0
-one_shot = false
+wait_time = 2.5
+one_shot = true
 autostart = false
 
 
