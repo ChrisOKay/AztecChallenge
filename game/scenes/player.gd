@@ -14,12 +14,15 @@ func _fixed_process(delta):
 	if can_jump:
 		if Input.is_key_pressed(KEY_W):
 			yet_to_jump = JUMP_HEIGHTS["HIGH"]
+			get_parent().get_node("SamplePlayer").play("jump3")			
 			can_jump = false
 		elif Input.is_key_pressed(KEY_S):
 			yet_to_jump = JUMP_HEIGHTS["MIDDLE"]
+			get_parent().get_node("SamplePlayer").play("jump2")
 			can_jump = false
 		elif Input.is_key_pressed(KEY_X):
 			yet_to_jump = JUMP_HEIGHTS["LOW"]
+			get_parent().get_node("SamplePlayer").play("jump1")
 			can_jump = false
 
 	# move up as long until the highest point is reached
@@ -36,6 +39,7 @@ func _fixed_process(delta):
 		# let player die if collision is not caused by downward movement
 		if test_move(Vector2(motion.x, min(0,motion.y))):
 			get_node("Sprite/AnimationPlayer").play("Dying")
+			get_parent().get_node("SamplePlayer").play("fail")
 			set_fixed_process(false)
 			var t = get_node("../Timer")
 			t.set_wait_time(2.5)
