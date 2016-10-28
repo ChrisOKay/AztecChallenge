@@ -11,6 +11,7 @@ var scnPhaseTitle = preload ("res://scenes/PhaseTitle.tscn")
 var scnWall = preload ("res://scenes/Wall.tscn")
 var scnCactus = preload ("res://scenes/Cactus.tscn")
 var curGameNode = Node.new() # temporary node to quickly delete all subnodes
+var intHighscore = 0
 
 func _ready():
 	randomize()
@@ -21,7 +22,9 @@ func initGame():
 	get_node("SamplePlayer").play("theme_mod2") # play intro
 	get_node("HUD/Menu").show() # show menu options
 	get_node("HUD/P1_Lifes").set_frame(3) # set player lifes to 3
+	get_node("HUD/P1_Score").set_text("000000")
 	get_node("Player1").hide() # hide player 1
+	get_node("Player1").intScore = 0 # reset score
 	
 	# move camera to begin of Phase 1 (pos 0,0,0)
 	get_viewport().set_canvas_transform(Matrix32(0,Vector2(0,0)))
