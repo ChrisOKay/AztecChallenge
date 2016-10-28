@@ -28,6 +28,7 @@ centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
+visibility/visible = false
 transform/pos = Vector2( 35.3521, 348.66 )
 transform/scale = Vector2( 3.58265, 34.6645 )
 shape = SubResource( 1 )
