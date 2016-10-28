@@ -19,7 +19,11 @@ var idle_cycles = 0
 # Workaround for a physics engine bug
 # see https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
 
+var intSteps = 0
+var arrReplayLog = [] # an array of logged y-Values for instant replay
+
 func _fixed_process(delta):
+	
 	if idle_cycles > 0:
 		idle_cycles -= 1
 		return
@@ -81,11 +85,35 @@ func _fixed_process(delta):
 
 		can_jump = true
 	else:
-		can_jump = false
+		can_jump = false # no jumps w/o touching ground
 		
-	moveGroundAndCanvas()
+	if get_pos().x > 90 * get_parent().TILE_SIZE:
+		# instant replay!
+		set_fixed_process(false)
+		runInstantReplay()
+		return
+
+	 # log every third position for future replay
+	intSteps += 1
+	if intSteps % 3 == 0:
+		arrReplayLog.append(get_pos())
+	
+	moveGroundAndCanvas() # scrolling
+
+func runInstantReplay():
+	var i
+	# temporary disable collision detection for instant replay
+	get_node("CollisionShape2D").set_trigger(true)
+	
+	get_node("Sprite/AnimationPlayer").play("Running")
+	for i in range(arrReplayLog.size()):
+		set_pos(arrReplayLog[i])
+		moveGroundAndCanvas() # scrolling
+		yield( get_tree(), "idle_frame" ) # wait for next idle frame
 
 func startLevel(intLevel):
+	intSteps = 0
+	arrReplayLog.clear()
 	set_pos(Vector2(90, 430))
 	idle_cycles = 10 # https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
 	get_node("Sprite/AnimationPlayer").play("Walking")
