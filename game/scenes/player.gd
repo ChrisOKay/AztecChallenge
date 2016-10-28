@@ -5,24 +5,32 @@ const JUMP_SPEED = 280
 const WALK_SPEED = 80
 const JUMP_HEIGHTS = {"LOW":60, "MIDDLE":120, "HIGH":180}
 
-var velocity
 var can_jump
 var yet_to_jump = 0 # distance to the highest point of the current jump
 
+var idle_cycles = 0
+# Workaround for a physics engine bug
+# see https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
+
 func _fixed_process(delta):
+	if idle_cycles > 0:
+		idle_cycles -= 1
+		return
+		
+	var velocity = 0
 	
 	if can_jump:
 		if Input.is_key_pressed(KEY_W):
 			yet_to_jump = JUMP_HEIGHTS["HIGH"]
-			get_parent().get_node("SamplePlayer").play("jump3")			
+			get_node("../SamplePlayer").play("jump3")			
 			can_jump = false
 		elif Input.is_key_pressed(KEY_S):
 			yet_to_jump = JUMP_HEIGHTS["MIDDLE"]
-			get_parent().get_node("SamplePlayer").play("jump2")
+			get_node("../SamplePlayer").play("jump2")
 			can_jump = false
 		elif Input.is_key_pressed(KEY_X):
 			yet_to_jump = JUMP_HEIGHTS["LOW"]
-			get_parent().get_node("SamplePlayer").play("jump1")
+			get_node("../SamplePlayer").play("jump1")
 			can_jump = false
 
 	# move up as long until the highest point is reached
@@ -31,37 +39,45 @@ func _fixed_process(delta):
 		yet_to_jump -= JUMP_SPEED * delta
 	else:
 		velocity = Vector2(WALK_SPEED, JUMP_SPEED)
-
+	
 	var motion = velocity * delta
+	
 	motion = move(motion)
-
+	
 	if (is_colliding()):
-		# let player die if collision is not caused by downward movement
-		if test_move(Vector2(motion.x, min(0,motion.y))):
-			get_node("Sprite/AnimationPlayer").play("Dying")
-			get_parent().get_node("SamplePlayer").play("fail")
-			set_fixed_process(false)
-			var t = get_node("../Timer")
-			t.set_wait_time(2.5)
-			t.connect("timeout", self, "startLevel", [1], CONNECT_ONESHOT)
-			t.start()
-			return
-		
-		can_jump = true
 		var n = get_collision_normal()
-		motion = n.slide(motion)
-		velocity = n.slide(velocity)
-		move(motion)
+
+		# if sliding horizontally is possible - do it
+		if n.x == 0: 
+			motion = n.slide(motion)
+			move(motion)
+		
+		# is the player (still) hitting the wall now?
+		if is_colliding() and (get_collision_normal().x != 0):
+			set_fixed_process(false)
+			get_node("Sprite/AnimationPlayer").play("Dying")
+			get_node("../SamplePlayer").play("fail")
+			var t = get_node("../Timer")
+			
+			var intLifecount = get_node("../HUD/P1_Lifes").get_frame()
+			if intLifecount > 0:
+				# restart level
+				get_node("../HUD/P1_Lifes").set_frame(intLifecount-1)
+				t.connect("timeout", self, "startLevel", [1], CONNECT_ONESHOT)
+			else:
+				# restart game
+				t.connect("timeout", get_parent(), "initGame", [],  CONNECT_ONESHOT)
+			t.start()
+
+		can_jump = true
 	else:
 		can_jump = false
-
+		
 	moveGroundAndCanvas()
-
-func _ready():
-	hide()
 
 func startLevel(intLevel):
 	set_pos(Vector2(90, 430))
+	idle_cycles = 10 # https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
 	get_node("Sprite/AnimationPlayer").play("Walking")
 	moveGroundAndCanvas()
 	if is_hidden(): show()
@@ -74,4 +90,3 @@ func moveGroundAndCanvas():
 	# transform canvas to follow Player1
 	var newCanvasPos = Matrix32(0,Vector2(-get_pos().x+150,0))
 	get_viewport().set_canvas_transform(newCanvasPos)
-	
