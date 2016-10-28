@@ -14,6 +14,7 @@ var curGameNode = Node.new() # temporary node to quickly delete all subnodes
 
 func _ready():
 	randomize()
+	get_node("SamplePlayer").set_polyphony(3)	#allow up to three simultaneous sounds
 	initGame()
 
 func initGame():
