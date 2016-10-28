@@ -88,7 +88,8 @@ func _fixed_process(delta):
 		can_jump = false # no jumps w/o touching ground
 		
 	if get_pos().x > 90 * get_parent().TILE_SIZE:
-		# instant replay!
+		# instant replay! Make some noise!
+		get_node("../SamplePlayer").play("replay")
 		set_fixed_process(false)
 		runInstantReplay()
 		return
