@@ -22,15 +22,15 @@ func _fixed_process(delta):
 	if can_jump:
 		if Input.is_key_pressed(KEY_W):
 			yet_to_jump = JUMP_HEIGHTS["HIGH"]
-			get_parent().get_node("SamplePlayer").play("jump3")			
+			get_node("../SamplePlayer").play("jump3")			
 			can_jump = false
 		elif Input.is_key_pressed(KEY_S):
 			yet_to_jump = JUMP_HEIGHTS["MIDDLE"]
-			get_parent().get_node("SamplePlayer").play("jump2")
+			get_node("../SamplePlayer").play("jump2")
 			can_jump = false
 		elif Input.is_key_pressed(KEY_X):
 			yet_to_jump = JUMP_HEIGHTS["LOW"]
-			get_parent().get_node("SamplePlayer").play("jump1")
+			get_node("../SamplePlayer").play("jump1")
 			can_jump = false
 
 	# move up as long until the highest point is reached
@@ -56,7 +56,7 @@ func _fixed_process(delta):
 		if is_colliding() and (get_collision_normal().x != 0):
 			set_fixed_process(false)
 			get_node("Sprite/AnimationPlayer").play("Dying")
-			get_parent().get_node("SamplePlayer").play("fail")
+			get_node("../SamplePlayer").play("fail")
 			var t = get_node("../Timer")
 			
 			var intLifecount = get_node("../HUD/P1_Lifes").get_frame()
@@ -76,7 +76,7 @@ func _fixed_process(delta):
 	moveGroundAndCanvas()
 
 func startLevel(intLevel):
-	set_pos(Vector2(90, 420))
+	set_pos(Vector2(90, 430))
 	idle_cycles = 10 # https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
 	get_node("Sprite/AnimationPlayer").play("Walking")
 	moveGroundAndCanvas()
@@ -90,4 +90,3 @@ func moveGroundAndCanvas():
 	# transform canvas to follow Player1
 	var newCanvasPos = Matrix32(0,Vector2(-get_pos().x+150,0))
 	get_viewport().set_canvas_transform(newCanvasPos)
-	
