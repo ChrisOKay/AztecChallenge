@@ -22,12 +22,15 @@ func _fixed_process(delta):
 	if can_jump:
 		if Input.is_key_pressed(KEY_W):
 			yet_to_jump = JUMP_HEIGHTS["HIGH"]
+			get_parent().get_node("SamplePlayer").play("jump3")			
 			can_jump = false
 		elif Input.is_key_pressed(KEY_S):
 			yet_to_jump = JUMP_HEIGHTS["MIDDLE"]
+			get_parent().get_node("SamplePlayer").play("jump2")
 			can_jump = false
 		elif Input.is_key_pressed(KEY_X):
 			yet_to_jump = JUMP_HEIGHTS["LOW"]
+			get_parent().get_node("SamplePlayer").play("jump1")
 			can_jump = false
 
 	# move up as long until the highest point is reached
@@ -52,8 +55,8 @@ func _fixed_process(delta):
 		# is the player (still) hitting the wall now?
 		if is_colliding() and (get_collision_normal().x != 0):
 			set_fixed_process(false)
-			print (get_collider().get_name(), ", ", get_collision_normal().x, "/", get_collision_normal().y)
 			get_node("Sprite/AnimationPlayer").play("Dying")
+			get_parent().get_node("SamplePlayer").play("fail")
 			var t = get_node("../Timer")
 			
 			var intLifecount = get_node("../HUD/P1_Lifes").get_frame()

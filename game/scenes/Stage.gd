@@ -12,7 +12,12 @@ var scnWall = preload ("res://scenes/Wall.tscn")
 var scnCactus = preload ("res://scenes/Cactus.tscn")
 var tile_size = 40
 
+
 func _ready():
+	var samples = get_node("SamplePlayer")
+	samples.play("theme_mod2")
+	
+	
 	randomize()
 	initGame()
 
