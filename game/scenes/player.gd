@@ -3,10 +3,17 @@ extends KinematicBody2D
 
 const JUMP_SPEED = 280
 const WALK_SPEED = 80
-const JUMP_HEIGHTS = {"LOW":60, "MIDDLE":120, "HIGH":180}
+const JUMP_VALUES = \
+	{"LOW": \
+		{"height":60, "sound":"jump1", "points":10}, \
+	"MIDDLE": \
+		{"height":120, "sound":"jump2", "points":50}, \
+	"HIGH": \
+		{"height":180, "sound":"jump3", "points":100}}
 
 var can_jump
 var yet_to_jump = 0 # distance to the highest point of the current jump
+var intScore = 0 # 
 
 var idle_cycles = 0
 # Workaround for a physics engine bug
@@ -20,18 +27,21 @@ func _fixed_process(delta):
 	var velocity = 0
 	
 	if can_jump:
-		if Input.is_key_pressed(KEY_W):
-			yet_to_jump = JUMP_HEIGHTS["HIGH"]
-			get_node("../SamplePlayer").play("jump3")			
+		var curJump = {}
+		if Input.is_key_pressed(KEY_W): curJump = JUMP_VALUES["HIGH"]
+		if Input.is_key_pressed(KEY_S): curJump = JUMP_VALUES["MIDDLE"]
+		if Input.is_key_pressed(KEY_X): curJump = JUMP_VALUES["LOW"]
+		if curJump.size() > 0:
+			yet_to_jump = curJump["height"]
+			get_node("../SamplePlayer").play(curJump["sound"])
+			intScore += curJump["points"]
+			get_node("../HUD/P1_Score").set_text("%06d" % intScore)
 			can_jump = false
-		elif Input.is_key_pressed(KEY_S):
-			yet_to_jump = JUMP_HEIGHTS["MIDDLE"]
-			get_node("../SamplePlayer").play("jump2")
-			can_jump = false
-		elif Input.is_key_pressed(KEY_X):
-			yet_to_jump = JUMP_HEIGHTS["LOW"]
-			get_node("../SamplePlayer").play("jump1")
-			can_jump = false
+
+			# Update highscore, if necessary
+			if get_parent().intHighscore < intScore:
+				get_parent().intHighscore = intScore
+				get_node("../HUD/Highscore").set_text("%06d" % intScore)			
 
 	# move up as long until the highest point is reached
 	if yet_to_jump > 0:

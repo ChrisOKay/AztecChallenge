@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=1]
+[gd_scene load_steps=18 format=1]
 
 [ext_resource path="res://scenes/Stage.gd" type="Script" id=1]
 [ext_resource path="res://sounds/fail.smp" type="Sample" id=2]
@@ -9,8 +9,9 @@
 [ext_resource path="res://sounds/theme_mod2.smp" type="Sample" id=7]
 [ext_resource path="res://scenes/Lifes.tscn" type="PackedScene" id=8]
 [ext_resource path="res://images/HUD.png" type="Texture" id=9]
-[ext_resource path="res://scenes/player.gd" type="Script" id=10]
-[ext_resource path="res://images/p1_spritesheet.png" type="Texture" id=11]
+[ext_resource path="res://scenes/Score.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/player.gd" type="Script" id=11]
+[ext_resource path="res://images/p1_spritesheet.png" type="Texture" id=12]
 
 [sub_resource type="SampleLibrary" id=1]
 
@@ -98,7 +99,6 @@ _update_shape_index = 0
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -130,6 +130,27 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
+[node name="P1_Score" parent="HUD" instance=ExtResource( 10 )]
+
+margin/left = 207.0
+margin/top = 9.0
+margin/right = 255.0
+margin/bottom = 23.0
+
+[node name="P2_Score" parent="HUD" instance=ExtResource( 10 )]
+
+margin/left = 207.0
+margin/top = 52.0
+margin/right = 255.0
+margin/bottom = 66.0
+
+[node name="Highscore" parent="HUD" instance=ExtResource( 10 )]
+
+margin/left = 550.0
+margin/top = 539.0
+margin/right = 598.0
+margin/bottom = 553.0
+
 [node name="Player1" type="KinematicBody2D" parent="."]
 
 transform/pos = Vector2( 91.4507, 430.191 )
@@ -141,12 +162,12 @@ shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
 collision/margin = 0.08
-script/script = ExtResource( 10 )
+script/script = ExtResource( 11 )
 
 [node name="Sprite" type="Sprite" parent="Player1"]
 
 transform/scale = Vector2( 0.57, 0.57 )
-texture = ExtResource( 11 )
+texture = ExtResource( 12 )
 centered = false
 vframes = 3
 hframes = 7
