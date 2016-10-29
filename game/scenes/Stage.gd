@@ -69,7 +69,7 @@ func _fixed_process(delta):
 			p.yet_to_jump = curJump["height"]
 			get_node("SamplePlayer").play(curJump["sound"])
 			p.intScore += curJump["points"]
-			get_node("HUD/P1_Score").set_text \
+			p.get_node(p.scoreNode).set_text \
 				("%06d" % p.intScore)
 			p.can_jump = false
 
@@ -107,7 +107,7 @@ func _fixed_process(delta):
 			if p.intLifes > 0:
 				# restart level
 				p.intLifes -= 1
-				get_node("HUD/P1_Lifes").set_frame(p.intLifes)
+				p.get_node(p.lifesNode).set_frame(p.intLifes)
 				t.connect("timeout", self, "startLevel", [1], CONNECT_ONESHOT)
 			else:
 				# restart game

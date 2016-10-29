@@ -3,12 +3,12 @@
 [ext_resource path="res://scenes/player.gd" type="Script" id=1]
 [ext_resource path="res://images/p1_spritesheet.png" type="Texture" id=2]
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 
 length = 0.2
 loop = true
@@ -19,7 +19,7 @@ tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = { "times":FloatArray( 0, 0.1 ), "transitions":FloatArray( 1, 1 ), "update":1, "values":[ 6, 13 ] }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=3]
 
 resource/name = "Running"
 length = 0.4
@@ -31,7 +31,7 @@ tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = { "times":FloatArray( 0, 0.1, 0.2, 0.3 ), "transitions":FloatArray( 1, 1, 1, 1 ), "update":1, "values":[ 0, 1, 2, 1 ] }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=4]
 
 length = 1.2
 loop = true
@@ -47,13 +47,15 @@ tracks/0/keys = { "times":FloatArray( 0, 0.3, 0.6, 0.9 ), "transitions":FloatArr
 transform/pos = Vector2( 91.4507, 430.191 )
 z/z = 1
 input/pickable = false
-shapes/0/shape = SubResource( 3 )
+shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1.78189, 0, 0, 2.64076, 21.6027, 26.8424 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
 collision/margin = 0.08
 script/script = ExtResource( 1 )
+scoreNode = null
+lifesNode = null
 
 [node name="Sprite" type="Sprite" parent="."]
 
@@ -69,9 +71,9 @@ frame = 2
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/Dying = SubResource( 4 )
-anims/Running = SubResource( 5 )
-anims/Walking = SubResource( 6 )
+anims/Dying = SubResource( 2 )
+anims/Running = SubResource( 3 )
+anims/Walking = SubResource( 4 )
 next/Running = ""
 playback/active = true
 playback/speed = 1.0
@@ -82,7 +84,7 @@ autoplay = ""
 
 transform/pos = Vector2( 21.6027, 26.8424 )
 transform/scale = Vector2( 1.78189, 2.64076 )
-shape = SubResource( 3 )
+shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
