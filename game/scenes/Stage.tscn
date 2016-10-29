@@ -8,8 +8,8 @@
 [ext_resource path="res://sounds/jump3.smp" type="Sample" id=6]
 [ext_resource path="res://sounds/replay.smp" type="Sample" id=7]
 [ext_resource path="res://sounds/theme_mod2.smp" type="Sample" id=8]
-[ext_resource path="res://scenes/Lifes.tscn" type="PackedScene" id=9]
-[ext_resource path="res://images/HUD.png" type="Texture" id=10]
+[ext_resource path="res://images/HUD.png" type="Texture" id=9]
+[ext_resource path="res://scenes/Lifes.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/Score.tscn" type="PackedScene" id=11]
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=12]
 
@@ -77,16 +77,10 @@ offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
-[node name="P1_Lifes" parent="HUD" instance=ExtResource( 9 )]
-
-transform/pos = Vector2( 586.963, 5.32408 )
-transform/scale = Vector2( 0.478287, 0.478287 )
-z/z = 1
-
 [node name="Foreground Image" type="Sprite" parent="HUD"]
 
 transform/pos = Vector2( 399.218, 302.104 )
-texture = ExtResource( 10 )
+texture = ExtResource( 9 )
 
 [node name="Menu" type="Label" parent="HUD"]
 
@@ -95,13 +89,24 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 194.0
-margin/top = 189.0
-margin/right = 548.0
-margin/bottom = 247.0
-text = "Press 1 to start single player game\nPress 2 to start two player game (not yet implemented)\nJumping: W-, S-, X-Keys for high, middle and low jump."
+margin/top = 178.0
+margin/right = 584.0
+margin/bottom = 272.0
+text = "Press 1 to start single player game.\nPress 2 to start two player game.\nJumping:\n  Player  1: O-, K-, M-Keys for high, middle and low jump.\n  Player  2: W-, S-, X-Keys for high, middle and low jump."
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+
+[node name="P1_Lifes" parent="HUD" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 586.963, 5.32408 )
+transform/scale = Vector2( 0.44, 0.44 )
+z/z = 1
+
+[node name="P2_Lifes" parent="HUD" instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 587.148, 50.5373 )
+transform/scale = Vector2( 0.44, 0.44 )
 
 [node name="P1_Score" parent="HUD" instance=ExtResource( 11 )]
 
@@ -129,6 +134,15 @@ margin/bottom = 553.0
 transform/pos = Vector2( 181.201, 431.299 )
 scoreNode = NodePath("../HUD/P1_Score")
 lifesNode = NodePath("../HUD/P1_Lifes")
+jumpKeyHigh = "O"
+jumpKeyMiddle = "K"
+jumpKeyLow = "M"
+
+[node name="Player2" parent="." instance=ExtResource( 12 )]
+
+transform/pos = Vector2( 71.5061, 426.867 )
+scoreNode = NodePath("../HUD/P2_Score")
+lifesNode = NodePath("../HUD/P2_Lifes")
 
 [node name="Timer" type="Timer" parent="."]
 

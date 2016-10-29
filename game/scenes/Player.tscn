@@ -56,6 +56,9 @@ collision/margin = 0.08
 script/script = ExtResource( 1 )
 scoreNode = null
 lifesNode = null
+jumpKeyHigh = "W"
+jumpKeyMiddle = "S"
+jumpKeyLow = "X"
 
 [node name="Sprite" type="Sprite" parent="."]
 
