@@ -205,7 +205,7 @@ func runInstantReplay():
 		p.get_node("CollisionShape2D").set_trigger(true)
 		p.get_node("Sprite/AnimationPlayer").play("Running")
 	
-	for i in range(1, arrReplayLog.size(), players.size()):
+	for i in range(0, arrReplayLog.size(), players.size()):
 		get_node("Player1").set_pos(arrReplayLog[i]) # update player position
 		var newCanvasPos = Matrix32(0,Vector2(-get_node("Player1").get_pos().x+150,0))
 		get_viewport().set_canvas_transform(newCanvasPos) # scroll canvas
