@@ -1,6 +1,15 @@
 
 extends Node2D
 
+const JUMP_SPEED = 280 # Vertical speed used both for upward and downward movement
+const WALK_SPEED = 80 # Horizonal scrolling speed
+const JUMP_VALUES = \
+	{"LOW": \
+		{"height":60, "sound":"jump1", "points":10}, \
+	"MIDDLE": \
+		{"height":120, "sound":"jump2", "points":50}, \
+	"HIGH": \
+		{"height":180, "sound":"jump3", "points":100}}
 const MAX_HEIGHT = 140 # maximum height of wall columns
 const V_OFFSET = 335 # Vertical offset of wall columns on Stage
 const BUMPINESS = 0.3 # From 0 (completely smooth) to 1 (extremely bumpy);
@@ -13,9 +22,118 @@ var scnCactus = preload ("res://scenes/Cactus.tscn")
 var curGameNode = Node.new() # temporary node to quickly delete all subnodes
 var intHighscore = 0
 
+var idle_cycles = 0
+# Workaround for a physics engine bug
+# see https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
+
+var intSteps = 0
+var arrReplayLog = []
+# an array of logged player positions for instant replay
+
+func startLevel(intLevel):
+	intSteps = 0
+	arrReplayLog.clear()
+	
+	var p = get_node("Player1")
+	p.set_pos(Vector2(90, 430))
+	idle_cycles = 10 # https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
+	p.get_node("Sprite/AnimationPlayer").play("Walking")
+	moveGroundAndCanvas()
+	if p.is_hidden(): p.show()
+	set_fixed_process(true)
+
+func moveGroundAndCanvas():
+	# continuosly move invisible ground to prevent player from falling through
+	get_node("Ground").set_pos(Vector2(get_node("Player1").get_pos().x,0))
+	
+	# transform canvas to follow Player1
+	var newCanvasPos = Matrix32(0,Vector2(-get_node("Player1").get_pos().x+150,0))
+	get_viewport().set_canvas_transform(newCanvasPos)
+
+
+func _fixed_process(delta):
+	
+	if idle_cycles > 0:
+		idle_cycles -= 1
+		return
+		
+	var p = get_node("Player1")
+	var velocity = 0
+	
+	if p.can_jump:
+		var curJump = {}
+		if Input.is_key_pressed(KEY_W): curJump = JUMP_VALUES["HIGH"]
+		if Input.is_key_pressed(KEY_S): curJump = JUMP_VALUES["MIDDLE"]
+		if Input.is_key_pressed(KEY_X): curJump = JUMP_VALUES["LOW"]
+		if curJump.size() > 0:
+			p.yet_to_jump = curJump["height"]
+			get_node("SamplePlayer").play(curJump["sound"])
+			p.intScore += curJump["points"]
+			get_node("HUD/P1_Score").set_text \
+				("%06d" % p.intScore)
+			p.can_jump = false
+
+			# Update highscore, if necessary
+			if intHighscore < p.intScore:
+				intHighscore = p.intScore
+				get_node("HUD/Highscore").set_text("%06d" % intHighscore)
+
+	# move up as long until the highest point is reached
+	if p.yet_to_jump > 0:
+		velocity = Vector2(WALK_SPEED, -JUMP_SPEED)
+		p.yet_to_jump -= JUMP_SPEED * delta
+	else:
+		velocity = Vector2(WALK_SPEED, JUMP_SPEED)
+	
+	var motion = velocity * delta
+	
+	motion = p.move(motion)
+	
+	if p.is_colliding():
+		var n = p.get_collision_normal()
+
+		# if sliding horizontally is possible - do it
+		if n.x == 0: 
+			motion = n.slide(motion)
+			p.move(motion)
+		
+		# is the player (still) hitting the wall now?
+		if p.is_colliding() and (p.get_collision_normal().x != 0):
+			set_fixed_process(false)
+			p.get_node("Sprite/AnimationPlayer").play("Dying")
+			get_node("SamplePlayer").play("fail")
+			var t = get_node("Timer")
+			
+			if p.intLifes > 0:
+				# restart level
+				p.intLifes -= 1
+				get_node("HUD/P1_Lifes").set_frame(p.intLifes)
+				t.connect("timeout", self, "startLevel", [1], CONNECT_ONESHOT)
+			else:
+				# restart game
+				t.connect("timeout", self, "initGame", [],  CONNECT_ONESHOT)
+			t.start()
+
+		p.can_jump = true
+	else:
+		p.can_jump = false # no jumps w/o touching ground
+		
+	if p.get_pos().x > 90 * TILE_SIZE:
+		# instant replay! Make some noise!
+		get_node("SamplePlayer").play("replay")
+		set_fixed_process(false)
+		runInstantReplay()
+		return
+
+	 # log every third position for future replay
+	intSteps += 1
+	if intSteps % 3 == 0:
+		arrReplayLog.append(p.get_pos())
+	
+	moveGroundAndCanvas() # scrolling
+
 func _ready():
 	randomize()
-	get_node("SamplePlayer").set_polyphony(3)	#allow up to three simultaneous sounds
 	initGame()
 
 func initGame():
@@ -72,7 +190,20 @@ func initGame():
 func _input(event):
 	if (event.type == 1) and (event.scancode == KEY_1):
 		get_node("HUD/Menu").hide()
-		get_node("Player1").startLevel(1)
+		startLevel(1)
 		set_process_input(false)
 		
 		#TODO: Add two player mode
+		
+func runInstantReplay():
+	var i
+	var p = get_node("Player1")
+	# temporary disable collision detection for instant replay
+	p.get_node("CollisionShape2D").set_trigger(true)
+	
+	p.get_node("Sprite/AnimationPlayer").play("Running")
+	for i in range(arrReplayLog.size()):
+		p.set_pos(arrReplayLog[i]) # update player position
+		var newCanvasPos = Matrix32(0,Vector2(-p.get_pos().x+150,0))
+		get_viewport().set_canvas_transform(newCanvasPos) # scroll canvas
+		yield( get_tree(), "idle_frame" ) # wait for next idle frame
