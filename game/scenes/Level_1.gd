@@ -6,6 +6,7 @@ const V_OFFSET = 335 # Vertical offset of wall columns on Stage
 const BUMPINESS = 0.3 # From 0 (completely smooth) to 1 (extremely bumpy);
 const FERTILITY = 0.25 # From 0 (no cactuses at all) to 1 (thick forest)
 const TILE_SIZE = 40 # Don't change this without resizing all images accordingly
+const END_OF_LEVEL = 80 
 
 var scnPhaseTitle = preload ("res://scenes/PhaseTitle.tscn")
 var scnWall = preload ("res://scenes/Wall.tscn")

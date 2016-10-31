@@ -6,14 +6,15 @@ const JUMP_SPEED = 280 # Vertical speed used both for upward and downward moveme
 const WALK_SPEED = 80 # Horizonal scrolling speed
 const JUMP_VALUES = \
 	{"LOW": \
-		{"height":60, "sound":"jump1", "points":10}, \
+		{"height":80, "sound":"jump1", "points":10}, \
 	"MIDDLE": \
-		{"height":120, "sound":"jump2", "points":50}, \
+		{"height":140, "sound":"jump2", "points":50}, \
 	"HIGH": \
-		{"height":180, "sound":"jump3", "points":100}}
+		{"height":200, "sound":"jump3", "points":100}}
 
-const LEVEL = { \
-	"Phase 1": preload ("res://scenes/Level_1.gd")}
+const LEVEL = [ \
+	preload ("res://scenes/Level_1.gd"), \
+	preload ("res://scenes/Level_2.gd")]
 
 var levels = [] # array of created levels
 var players = [] # array of active players
@@ -24,15 +25,15 @@ var idle_cycles = 0
 # see https://godotengine.org/qa/6835/how-to-set_global_pos-of-kinematicbody2d
 
 var intSteps = 0
-var arrReplayLog = []
-# an array of logged player positions for instant replay
+var arrReplayLog = [] # an array of logged player positions for instant replay
+var nextReplayPoint = 85
 
 func startLevel(intLevel):
 	intSteps = 0
 	arrReplayLog.clear()
 	
 	for p in players:
-		p.set_pos(p.initial_pos)
+		p.set_pos(Vector2(p.initial_pos.x + (nextReplayPoint - 85) * TILE_SIZE, p.initial_pos.y))
 		p.get_node("Sprite/AnimationPlayer").play("Walking")
 		if p.is_hidden(): p.show()
 
@@ -88,13 +89,13 @@ func _fixed_process(delta):
 		if p.is_colliding():
 			var n = p.get_collision_normal()
 	
-			# if sliding horizontally is possible - do it
-			if n.x == 0: 
+			# if colliding with ground only - slide
+			if n.y == -1: 
 				motion = n.slide(motion)
 				p.move(motion)
 			
-			# is the player (still) hitting the wall now?
-			if p.is_colliding() and (p.get_collision_normal().x != 0):
+			# is the player (still) hitting the ground only?
+			if p.is_colliding() and (p.get_collision_normal().y != -1):
 				set_fixed_process(false)
 				p.get_node("Sprite/AnimationPlayer").play("Dying")
 				get_node("SamplePlayer").play("fail")
@@ -119,8 +120,9 @@ func _fixed_process(delta):
 		if intSteps % 3 == 0:
 			arrReplayLog.append(p.get_pos())
 			
-	if get_node("Player1").get_pos().x > 90 * TILE_SIZE:
+	if get_node("Player1").get_pos().x > nextReplayPoint * TILE_SIZE:
 		set_fixed_process(false)
+		nextReplayPoint += 80
 		# instant replay! Make some noise!
 		get_node("SamplePlayer").play("replay")
 		runInstantReplay()
@@ -146,9 +148,8 @@ func initGame():
 	levels.clear()
 
 	# create new landscape
-	for l in LEVEL.values(): levels.append(l.new())
+	for l in LEVEL: levels.append(l.new())
 	for n in levels: add_child(n)
-	
 	
 	# listen to key events
 	set_process_input(true)
@@ -180,3 +181,11 @@ func runInstantReplay():
 		if players.size() == 2:
 			get_node("Player2").set_pos(arrReplayLog[i+1])
 		yield( get_tree(), "idle_frame" ) # wait for next idle frame
+	
+	for p in players:
+		# reactivate collision detection
+		p.get_node("CollisionShape2D").set_trigger(false)
+		p.get_node("Sprite/AnimationPlayer").play("Walking")
+	
+	arrReplayLog.clear()
+	set_fixed_process(true) # continue game
