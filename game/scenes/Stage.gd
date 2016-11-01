@@ -14,7 +14,9 @@ const JUMP_VALUES = \
 
 const LEVEL = [ \
 	preload ("res://scenes/Level_1.gd"), \
-	preload ("res://scenes/Level_2.gd")]
+	preload ("res://scenes/Level_2.gd"), \
+	preload ("res://scenes/Level_3.gd")]
+	
 
 var levels = [] # array of created levels
 var players = [] # array of active players
