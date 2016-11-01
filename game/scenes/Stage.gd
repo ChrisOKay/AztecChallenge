@@ -142,6 +142,8 @@ func initGame():
 	get_node("Player1").reset() # reset Player 1
 	get_node("Player2").reset() # reset Player 2
 	
+	nextReplayPoint = 85
+	
 	# move camera to begin of Phase 1 (pos 0,0,0)
 	get_viewport().set_canvas_transform(Matrix32(0,Vector2(0,0)))
 	
@@ -153,6 +155,8 @@ func initGame():
 	for l in LEVEL: levels.append(l.new())
 	for n in levels: add_child(n)
 	
+	idle_cycles = 10
+		
 	# listen to key events
 	set_process_input(true)
 
